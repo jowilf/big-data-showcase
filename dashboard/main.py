@@ -23,7 +23,7 @@ app.layout = html.Div(
         html.H1(children="DashBoard", style={"textAlign": "center"}),
         html.Div(
             children=[
-                dcc.Graph(figure=HBaseReader().figure(), id="brand-sales"),
+                dcc.Graph(figure=hbase.figure(), id="brand-sales"),
             ],
         ),
         html.Div(
@@ -33,8 +33,7 @@ app.layout = html.Div(
         ),
         dcc.Interval(
             id="interval-component",
-            interval=1 * 1000,
-            n_intervals=0,  # in milliseconds
+            interval=1 * 1000
         ),
     ],
 )

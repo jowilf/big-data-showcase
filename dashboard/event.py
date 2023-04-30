@@ -14,21 +14,27 @@ class RealTimeEvent:
 
     Attributes:
     -----------
-    dates : list of datetime.datetime
-        List of datetime objects representing the timestamp of each data point.
-    views : list of int
-        List of integers representing the number of views at each timestamp.
-    purchases : list of int
-        List of integers representing the number of purchases at each timestamp.
-    carts : list of int
-        List of integers representing the number of items added to cart at each timestamp.
-    queue : collections.deque
-        A deque to store incoming events.
+    dates : collections.deque
+        A deque of datetime objects representing the timestamp of each data point.
+        The deque is initialized with a maximum length of 15 data points and will automatically discard old data
+        when new data points are added.
+    views : collections.deque
+        A deque of integers representing the number of views at each timestamp.
+        The deque is initialized with a maximum length of 15 data points and will automatically discard old data
+        when new data points are added.
+    purchases : collections.deque
+        A deque of integers representing the number of purchases at each timestamp.
+        The deque is initialized with a maximum length of 15 data points and will automatically discard old data
+        when new data points are added.
+    carts : collections.deque
+        A deque of integers representing the number of items added to cart at each timestamp.
+        The deque is initialized with a maximum length of 15 data points and will automatically discard old data
+        when new data points are added.
     """
 
     def __init__(self) -> None:
         """
-        Initializes the RealTimeEvent object with empty lists for dates, views, purchases and carts,
+        Initializes the RealTimeEvent object with empty deques for dates, views, purchases and carts,
         and an empty deque for incoming events.
         """
         self.dates: deque[datetime] = deque(maxlen=PERIOD)
