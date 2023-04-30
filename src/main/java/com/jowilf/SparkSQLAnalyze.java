@@ -17,12 +17,11 @@ public class SparkSQLAnalyze {
 
         public static void main(String[] args) throws IOException {
                 // Set up Spark configuration
-                SparkConf conf = new SparkConf().setAppName("MyApp").setMaster("local[*]");
+                SparkConf conf = new SparkConf().setAppName("Electronic store").setMaster("local[*]");
 
                 // Create a Spark session
                 SparkSession spark = SparkSession
                                 .builder()
-                                // .appName("Java Spark SQL basic example")
                                 .config(conf)
                                 .getOrCreate();
 
