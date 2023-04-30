@@ -62,7 +62,7 @@ The result is sent to another Kafka topic named `electronic-analytics` to be vis
 
 The result is also saved into HBase for future reference. In HBase, the computed time is used as a row key and the result is saved into one column family with 3 columns when each column represent the event_type.
 
-![](/images/hbase_events.png.png)
+![](/images/hbase_events.png)
 
 The code can be found in the file [KafkaStream.java](/src/main/java/com/jowilf/KafkaStream.java)
 
