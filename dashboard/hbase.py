@@ -1,7 +1,7 @@
 import happybase
-
 import pandas as pd
 import plotly.express as px
+
 from .config import HBASE_URL
 
 brands = [
@@ -84,3 +84,5 @@ class HBaseReader:
             barmode="group",
             title="Events by Brand",
         )
+
+

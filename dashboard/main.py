@@ -1,13 +1,13 @@
+import json
 import threading
-from confluent_kafka import Consumer
-from dash import Dash, html, dcc, Output, Input
-
-from dashboard.event import RealTimeEvent
-from dashboard.hbase import HBaseReader
-from dashboard.config import KAFKA_URL, KAFKA_GROUP_ID, THREAD_DAEMON
-
 
 import flask
+from confluent_kafka import Consumer
+from dash import Dash, Input, Output, dcc, html
+
+from dashboard.config import KAFKA_GROUP_ID, KAFKA_URL, THREAD_DAEMON
+from dashboard.event import RealTimeEvent
+from dashboard.hbase import HBaseReader
 
 server = flask.Flask(__name__)
 
@@ -44,7 +44,6 @@ app.layout = html.Div(
     Output("graph-content", "figure"), Input("interval-component", "n_intervals")
 )
 def update_graph_live(n):
-    event.next()
     return event.figure()
 
 
@@ -62,20 +61,19 @@ def kafka_listener():
         if msg is None:
             continue
         if msg.error():
-            print("Consumer error: {}".format(msg.error()))
+            print(f"Consumer error: {msg.error()}")
             continue
 
         key = msg.key().decode("utf-8") if msg.key() is not None else ""
         value = msg.value().decode("utf-8")
 
-        print("Received message: {} ;; {}".format(key, value))
+        print(f"Received message: {key} ;; {value}")
 
         if key == "event_type_agg":
-            event.add_event(value)
+            event.append(json.loads(value))
 
 
-thread = threading.Thread(name="kafka consumer", target=kafka_listener)
-thread.setDaemon(THREAD_DAEMON)
+thread = threading.Thread(name="kafka consumer", target=kafka_listener, daemon=THREAD_DAEMON)
 thread.start()
 
 if __name__ == "__main__":

@@ -1,8 +1,9 @@
-from confluent_kafka import Producer
-from confluent_kafka.admin import AdminClient, NewTopic
 import csv
 import json
 import time
+
+from confluent_kafka import Producer
+from confluent_kafka.admin import AdminClient, NewTopic
 
 producer = Producer({"bootstrap.servers": "kafka:29092"})
 TOPIC = "electronic-store"
@@ -13,7 +14,7 @@ def delivery_report(err, msg):
     """Called once for each message produced to indicate delivery result.
     Triggered by poll() or flush()."""
     if err is not None:
-        print("Message delivery failed: {}".format(err))
+        print(f"Message delivery failed: {err}")
     else:
         print(
             "Message delivered to {} [{}]".format(
@@ -26,7 +27,6 @@ def create_topics():
     admin_client = AdminClient({"bootstrap.servers": "kafka:29092"})
     topic_list = [NewTopic(x) for x in [TOPIC, OUT_TOPIC]]
     admin_client.create_topics(topic_list)
-    # print(admin_client.list_topics().topics)
 
 
 create_topics()
@@ -36,8 +36,6 @@ Reads the dataset and sends each row as a JSON-encoded message to the Kafka topi
 """
 with open("dataset.csv", newline="") as csvfile:
     reader = csv.DictReader(csvfile)
-
-    producer.produce(OUT_TOPIC, "{}".encode("utf-8"), callback=delivery_report)
 
     for row in reader:
         producer.poll(0)

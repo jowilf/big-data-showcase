@@ -1,10 +1,11 @@
-from datetime import datetime
 import random
-from plotly.graph_objs.scatter import Legendgrouptitle
-import plotly.graph_objs as go
-
-import json
 from collections import deque
+from datetime import datetime
+
+import plotly.graph_objs as go
+from plotly.graph_objs.scatter import Legendgrouptitle
+
+PERIOD = 15
 
 
 class RealTimeEvent:
@@ -30,11 +31,10 @@ class RealTimeEvent:
         Initializes the RealTimeEvent object with empty lists for dates, views, purchases and carts,
         and an empty deque for incoming events.
         """
-        self.dates: list[datetime] = []
-        self.views: list[int] = []
-        self.purchases: list[int] = []
-        self.carts: list[int] = []
-        self.queue: deque[dict] = deque()
+        self.dates: deque[datetime] = deque(maxlen=PERIOD)
+        self.views: deque[int] = deque(maxlen=PERIOD)
+        self.purchases: deque[int] = deque(maxlen=PERIOD)
+        self.carts: deque[int] = deque(maxlen=PERIOD)
 
     def append(self, data: dict):
         """
@@ -52,22 +52,6 @@ class RealTimeEvent:
         self.views.append(data.get("view", 0))
         self.purchases.append(data.get("purchase", 0))
         self.carts.append(data.get("cart", 0))
-        if len(self.dates) > 15:
-            self.pop()
-
-    def pop(self, idx=0):
-        """
-        Removes an element from each of the lists of dates, views, purchases and carts.
-
-        Parameters:
-        -----------
-        idx : int, default 0
-            The index of the element to be removed from the lists.
-        """
-        self.dates.pop(idx)
-        self.views.pop(idx)
-        self.purchases.pop(idx)
-        self.carts.pop(idx)
 
     def append_random(self):
         """
@@ -82,27 +66,6 @@ class RealTimeEvent:
             }
         )
 
-    def add_event(self, value):
-        """
-        Adds an incoming event to the deque of events to be processed.
-
-        Parameters:
-        -----------
-        value : str
-            A JSON string with the incoming event data.
-        """
-        self.queue.append(value)
-
-    def next(self):
-        """
-        Processes the next event in the buffer.
-        """
-        if len(self.queue) > 0:
-            value = self.queue.popleft()
-            data = json.loads(value)
-            if len(data) > 0:
-                self.append(data)
-
     def figure(self):
         """
         Generates a Plotly Figure object representing the stream data.
@@ -113,22 +76,22 @@ class RealTimeEvent:
         return go.Figure(
             data=[
                 go.Scatter(
-                    x=self.dates,
-                    y=self.views,
+                    x=list(self.dates),
+                    y=list(self.views),
                     legendgroup="view",
                     name="View",
                     legendgrouptitle=Legendgrouptitle(text="View"),
                 ),
                 go.Scatter(
-                    x=self.dates,
-                    y=self.carts,
+                    x=list(self.dates),
+                    y=list(self.carts),
                     name="Cart",
                     legendgroup="cart",
                     legendgrouptitle=Legendgrouptitle(text="Cart"),
                 ),
                 go.Scatter(
-                    x=self.dates,
-                    y=self.purchases,
+                    x=list(self.dates),
+                    y=list(self.purchases),
                     name="Purchase",
                     legendgroup="purchase",
                     legendgrouptitle=Legendgrouptitle(text="Purchase"),
