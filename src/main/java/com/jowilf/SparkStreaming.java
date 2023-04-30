@@ -24,7 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import scala.Tuple2;
 
-public class KafkaStream {
+public class SparkStreaming {
     public static String KAFKA_TOPIC = "electronic-store";
     public static TableUtils tableUtils = new TableUtils();
 
@@ -34,7 +34,7 @@ public class KafkaStream {
         tableUtils.createRealTimeTable();
 
         // Set up the Spark Streaming context
-        SparkConf sparkConf = new SparkConf().setAppName("JavaNetworkWordCount");
+        SparkConf sparkConf = new SparkConf().setAppName("Electronic store");
         JavaStreamingContext ssc = new JavaStreamingContext(sparkConf, Durations.seconds(2));
 
         // Set the log level to ERROR to reduce console output

@@ -22,7 +22,7 @@ public class SparkSQLAnalyze {
                 // Create a Spark session
                 SparkSession spark = SparkSession
                                 .builder()
-                                .appName("Java Spark SQL basic example")
+                                // .appName("Java Spark SQL basic example")
                                 .config(conf)
                                 .getOrCreate();
 

@@ -64,7 +64,7 @@ The result is also saved into HBase for future reference. In HBase, the computed
 
 ![](/images/hbase_events.png)
 
-The code can be found in the file [KafkaStream.java](/src/main/java/com/jowilf/KafkaStream.java)
+The code can be found in the file [SparkStreaming.java](/src/main/java/com/jowilf/SparkStreaming.java)
 
 # Spark SQL
 
